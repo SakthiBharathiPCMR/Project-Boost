@@ -6,6 +6,8 @@ public class Movement : MonoBehaviour
 {
     private Rigidbody rigidbodyRocket;
 
+
+    
     [SerializeField]
     private float thrustSpeed = 1f;
     [SerializeField]
