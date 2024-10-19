@@ -5,6 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     private Rigidbody rigidbodyRocket;
+    private AudioSource audioSource;
 
 
     
@@ -16,6 +17,7 @@ public class Movement : MonoBehaviour
     private void Start()
     {
         rigidbodyRocket = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -31,7 +33,15 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
+            if(!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
             rigidbodyRocket.AddRelativeForce(Vector3.up * thrustSpeed * Time.fixedDeltaTime);
+        }
+        else
+        {
+            audioSource.Stop();
         }
 
     }
@@ -67,4 +77,22 @@ public class Movement : MonoBehaviour
     {
         transform.Rotate(Vector3.forward * Time.deltaTime * rotateThrust);
     }
+
+
+
+
+
+
+
+    public void DisableMovement()
+    {
+        audioSource.enabled = false;
+        this.enabled = false;
+    }
+
+
+
+
+
+
 }
