@@ -5,10 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
-    [SerializeField] 
-    private Movement movementScript;
 
+    [SerializeField]
+    private AudioClip[] audioClips;
+
+
+    private Movement movementScript;
     private float delayAmount = 1f;
+    private bool isTransitioning = false;
+
+
 
     private void Start()
     {
@@ -17,6 +23,8 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (isTransitioning) return;
+
         switch (collision.gameObject.tag)
         {
             case "Friendly":
@@ -45,11 +53,24 @@ public class CollisionHandler : MonoBehaviour
 
     private void StartCrashSequence()
     {
+        isTransitioning = true;
+
+        movementScript.audioSource.Stop();
+        movementScript.audioSource.PlayOneShot(audioClips[0]);
         movementScript.DisableMovement();
         Invoke("ReloadLevel", delayAmount);
 
     }
 
+    private void StartSuccessSequence()
+    {
+        isTransitioning = true;
+
+        movementScript.audioSource.Stop();
+        movementScript.audioSource.PlayOneShot(audioClips[1]);
+        movementScript.DisableMovement();
+        Invoke("LoadNextLevel", delayAmount);
+    }
     private void ReloadLevel()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -57,18 +78,12 @@ public class CollisionHandler : MonoBehaviour
 
     }
 
-    private void StartSuccessSequence()
-    {
-        movementScript.DisableMovement();
-        Invoke("LoadNextLevel", delayAmount);
-    }
-
     private void LoadNextLevel()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        int nextSceneIndex=currentSceneIndex+1;
+        int nextSceneIndex = currentSceneIndex + 1;
 
-        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings) 
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
             nextSceneIndex = 0;
 
 

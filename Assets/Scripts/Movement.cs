@@ -3,21 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
-{
-    private Rigidbody rigidbodyRocket;
-    private AudioSource audioSource;
-
-
-    
+{   
     [SerializeField]
     private float thrustSpeed = 1f;
     [SerializeField]
     private float rotateSpeed = 1f;
+    [SerializeField]
+    private AudioClip engineClip;
+
+    private Rigidbody rigidbodyRocket;
+    public AudioSource audioSource;
 
     private void Start()
     {
         rigidbodyRocket = GetComponent<Rigidbody>();
-        audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -35,7 +34,8 @@ public class Movement : MonoBehaviour
         {
             if(!audioSource.isPlaying)
             {
-                audioSource.Play();
+                audioSource.PlayOneShot(engineClip);
+
             }
             rigidbodyRocket.AddRelativeForce(Vector3.up * thrustSpeed * Time.fixedDeltaTime);
         }
@@ -86,7 +86,7 @@ public class Movement : MonoBehaviour
 
     public void DisableMovement()
     {
-        audioSource.enabled = false;
+       // audioSource.enabled = false;
         this.enabled = false;
     }
 
