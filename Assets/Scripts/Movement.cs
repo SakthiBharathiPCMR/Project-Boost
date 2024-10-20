@@ -23,6 +23,12 @@ public class Movement : MonoBehaviour
     private void Update()
     {
         ProcessRotate();
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Debug.Log("quit worked");
+            Application.Quit();
+        }
     }
 
     private void FixedUpdate()
