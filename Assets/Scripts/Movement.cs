@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
-{   
+{
     [SerializeField]
     private float thrustSpeed = 1f;
     [SerializeField]
     private float rotateSpeed = 1f;
     [SerializeField]
     private AudioClip engineClip;
+    [SerializeField]
+    private ParticleSystem[] paricleSystems;
 
     private Rigidbody rigidbodyRocket;
     public AudioSource audioSource;
@@ -32,11 +34,12 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            if(!audioSource.isPlaying)
+            if (!audioSource.isPlaying)
             {
                 audioSource.PlayOneShot(engineClip);
-
             }
+
+            paricleSystems[0].Play();
             rigidbodyRocket.AddRelativeForce(Vector3.up * thrustSpeed * Time.fixedDeltaTime);
         }
         else
@@ -64,15 +67,22 @@ public class Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             ApplyRotation(rotateSpeed);
+
+            paricleSystems[1].Play();
+
         }
         else if (Input.GetKey(KeyCode.D))
         {
             ApplyRotation(-rotateSpeed);
+
+
+            paricleSystems[2].Play();
+
         }
 
 
     }
-    
+
     private void ApplyRotation(float rotateThrust)
     {
         transform.Rotate(Vector3.forward * Time.deltaTime * rotateThrust);
@@ -86,7 +96,7 @@ public class Movement : MonoBehaviour
 
     public void DisableMovement()
     {
-       // audioSource.enabled = false;
+        // audioSource.enabled = false;
         this.enabled = false;
     }
 

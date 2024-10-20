@@ -8,11 +8,14 @@ public class CollisionHandler : MonoBehaviour
 
     [SerializeField]
     private AudioClip[] audioClips;
+    [SerializeField]
+    private ParticleSystem[] paricleSystems;
 
 
     private Movement movementScript;
     private float delayAmount = 1f;
     private bool isTransitioning = false;
+    private bool isCollisionDisabled = false;
 
 
 
@@ -21,25 +24,37 @@ public class CollisionHandler : MonoBehaviour
         movementScript = GetComponent<Movement>();
     }
 
+    private void Update()
+    {
+        RespondToDebugKeys();
+    }
+
+    private void RespondToDebugKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            isCollisionDisabled = !isCollisionDisabled;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (isTransitioning) return;
+        if (isTransitioning || isCollisionDisabled) return;
 
         switch (collision.gameObject.tag)
         {
             case "Friendly":
                 {
-                    Debug.Log("Its your friend");
+                    //Debug.Log("Its your friend");
                 }
                 break;
             case "Finish":
                 {
                     StartSuccessSequence();
-                }
-                break;
-            case "Fuel":
-                {
-                    Debug.Log("Its time reacharge the fuel");
                 }
                 break;
             default:
@@ -57,6 +72,7 @@ public class CollisionHandler : MonoBehaviour
 
         movementScript.audioSource.Stop();
         movementScript.audioSource.PlayOneShot(audioClips[0]);
+        paricleSystems[0].Play();
         movementScript.DisableMovement();
         Invoke("ReloadLevel", delayAmount);
 
@@ -68,6 +84,7 @@ public class CollisionHandler : MonoBehaviour
 
         movementScript.audioSource.Stop();
         movementScript.audioSource.PlayOneShot(audioClips[1]);
+        paricleSystems[1].Play();
         movementScript.DisableMovement();
         Invoke("LoadNextLevel", delayAmount);
     }
